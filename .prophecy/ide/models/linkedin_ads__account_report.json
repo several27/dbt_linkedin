@@ -1,0 +1,44 @@
+{
+  "id" : "linkedin_ads__account_report",
+  "metainfo" : {
+    "label" : "linkedin_ads__account_report",
+    "autoLayout" : true,
+    "staleState" : "none",
+    "sourceSuggestions" : {
+      "sources" : [ ]
+    },
+    "version" : 3
+  },
+  "processes" : {
+    "dnM8Dyfw" : {
+      "id" : "dnM8Dyfw",
+      "component" : "TargetModel",
+      "metadata" : {
+        "label" : "linkedin_ads__account_report",
+        "phase" : 0
+      },
+      "properties" : {
+        "customQueryDisabled" : true,
+        "customQuery" : true,
+        "incrementalEditorDisabled" : true,
+        "query" : "{{ config(enabled=var('ad_reporting__linkedin_ads_enabled', True)) }}\n\nwith account as (\n\n    select *\n    from {{ var('account_history') }}\n    where is_latest_version\n),\n\ncampaign as (\n\n    select *\n    from {{ var('campaign_history') }}\n    where is_latest_version\n),\n\nreport as (\n\n    select *\n    from {{ var('ad_analytics_by_campaign') }}\n),\n\nfinal as (\n\n    select \n        report.source_relation,\n        report.date_day,\n        account.account_id,\n        account.account_name,\n        account.version_tag,\n        account.currency,\n        account.status,\n        account.type,\n        account.last_modified_at,\n        account.created_at,\n        sum(report.clicks) as clicks,\n        sum(report.impressions) as impressions,\n        sum(report.cost) as cost\n\n        {{ fivetran_utils.persist_pass_through_columns('linkedin_ads__campaign_passthrough_metrics', transform='sum') }}\n    \n    from report \n    left join campaign \n        on report.campaign_id = campaign.campaign_id\n        and report.source_relation = campaign.source_relation\n    left join account \n        on campaign.account_id = account.account_id\n        and campaign.source_relation = account.source_relation\n\n    {{ dbt_utils.group_by(10) }}\n\n)\n\nselect *\nfrom final",
+        "isModel" : true,
+        "incrementalKey" : false,
+        "incremental" : {
+          "expression" : "true"
+        }
+      },
+      "ports" : {
+        "inputs" : [ ],
+        "outputs" : [ {
+          "id" : "EzP5mWue",
+          "slug" : "out"
+        } ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : true
+      }
+    }
+  },
+  "connections" : [ ],
+  "component" : "Model"
+}

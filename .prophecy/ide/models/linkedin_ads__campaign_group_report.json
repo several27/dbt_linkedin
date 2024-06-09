@@ -1,0 +1,44 @@
+{
+  "id" : "linkedin_ads__campaign_group_report",
+  "metainfo" : {
+    "label" : "linkedin_ads__campaign_group_report",
+    "autoLayout" : true,
+    "staleState" : "none",
+    "sourceSuggestions" : {
+      "sources" : [ ]
+    },
+    "version" : 3
+  },
+  "processes" : {
+    "IpBxGLfG" : {
+      "id" : "IpBxGLfG",
+      "component" : "TargetModel",
+      "metadata" : {
+        "label" : "linkedin_ads__campaign_group_report",
+        "phase" : 0
+      },
+      "properties" : {
+        "customQueryDisabled" : true,
+        "customQuery" : true,
+        "incrementalEditorDisabled" : true,
+        "query" : "{{ config(enabled=var('ad_reporting__linkedin_ads_enabled', True)) }}\n\nwith campaign_group as (\n\n    select *\n    from {{ var('campaign_group_history') }}\n    where is_latest_version\n),\n\ncampaign as (\n\n    select *\n    from {{ var('campaign_history') }}\n    where is_latest_version\n),\n\naccount as (\n\n    select *\n    from {{ var('account_history') }}\n    where is_latest_version\n),\n\nreport as (\n\n    select *\n    from {{ var('ad_analytics_by_campaign') }}\n),\n\nfinal as (\n\n    select \n        report.source_relation,\n        report.date_day,\n        campaign_group.campaign_group_id,\n        campaign_group.campaign_group_name,\n        account.account_id,\n        account.account_name,\n        campaign_group.status,\n        account.currency,\n        campaign_group.is_backfilled,\n        campaign_group.run_schedule_start_at,\n        campaign_group.run_schedule_end_at,\n        campaign_group.last_modified_at,\n        campaign_group.created_at,\n        sum(report.clicks) as clicks,\n        sum(report.impressions) as impressions,\n        sum(report.cost) as cost\n\n        {{ fivetran_utils.persist_pass_through_columns('linkedin_ads__campaign_passthrough_metrics', transform='sum') }}\n    \n    from report \n    left join campaign \n        on report.campaign_id = campaign.campaign_id\n        and report.source_relation = campaign.source_relation\n    left join campaign_group\n        on campaign.campaign_group_id = campaign_group.campaign_group_id\n        and campaign.source_relation = campaign_group.source_relation\n    left join account \n        on campaign.account_id = account.account_id\n        and campaign.source_relation = account.source_relation\n\n    {{ dbt_utils.group_by(13) }}\n\n)\n\nselect *\nfrom final",
+        "isModel" : true,
+        "incrementalKey" : false,
+        "incremental" : {
+          "expression" : "true"
+        }
+      },
+      "ports" : {
+        "inputs" : [ ],
+        "outputs" : [ {
+          "id" : "Zshcvw76",
+          "slug" : "out"
+        } ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : true
+      }
+    }
+  },
+  "connections" : [ ],
+  "component" : "Model"
+}

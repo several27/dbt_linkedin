@@ -1,0 +1,44 @@
+{
+  "id" : "linkedin_ads__url_report",
+  "metainfo" : {
+    "label" : "linkedin_ads__url_report",
+    "autoLayout" : true,
+    "staleState" : "none",
+    "sourceSuggestions" : {
+      "sources" : [ ]
+    },
+    "version" : 3
+  },
+  "processes" : {
+    "j9bwJCzi" : {
+      "id" : "j9bwJCzi",
+      "component" : "TargetModel",
+      "metadata" : {
+        "label" : "linkedin_ads__url_report",
+        "phase" : 0
+      },
+      "properties" : {
+        "customQueryDisabled" : true,
+        "customQuery" : true,
+        "incrementalEditorDisabled" : true,
+        "query" : "{{ config(enabled=var('ad_reporting__linkedin_ads_enabled', True)) }}\n\nwith creative as (\n\n    select *\n    from {{ var('creative_history') }}\n    where is_latest_version\n),\n\ncampaign as (\n\n    select *\n    from {{ var('campaign_history') }}\n    where is_latest_version\n),\n\ncampaign_group as (\n\n    select *\n    from {{ var('campaign_group_history') }}\n    where is_latest_version\n),\n\naccount as (\n\n    select *\n    from {{ var('account_history') }}\n    where is_latest_version\n),\n\nreport as (\n\n    select *\n    from {{ var('ad_analytics_by_creative') }}\n),\n\nfinal as (\n\n    select \n        report.source_relation,\n        report.date_day,\n        creative.click_uri,\n        creative.base_url,\n        creative.url_host,\n        creative.url_path,\n        creative.utm_source,\n        creative.utm_medium,\n        creative.utm_campaign,\n        creative.utm_content,\n        creative.utm_term,\n        report.creative_id,\n        campaign.campaign_id,\n        campaign.campaign_name,\n        campaign_group.campaign_group_id,\n        campaign_group.campaign_group_name,\n        account.account_id,\n        account.account_name,\n        account.currency,\n        sum(report.clicks) as clicks,\n        sum(report.impressions) as impressions,\n        sum(report.cost) as cost\n\n        {{ fivetran_utils.persist_pass_through_columns('linkedin_ads__creative_passthrough_metrics', transform='sum') }}\n    \n    from report \n    left join creative \n        on report.creative_id = creative.creative_id\n        and report.source_relation = creative.source_relation\n    left join campaign \n        on creative.campaign_id = campaign.campaign_id\n        and creative.source_relation = campaign.source_relation\n    left join campaign_group\n        on campaign.campaign_group_id = campaign_group.campaign_group_id\n        and campaign.source_relation = campaign_group.source_relation\n    left join account \n        on campaign.account_id = account.account_id\n        and campaign.source_relation = account.source_relation\n\n    {% if var('ad_reporting__url_report__using_null_filter', True) %}\n        where creative.click_uri is not null\n    {% endif %}\n\n    {{ dbt_utils.group_by(19) }}\n\n)\n\nselect *\nfrom final",
+        "isModel" : true,
+        "incrementalKey" : false,
+        "incremental" : {
+          "expression" : "true"
+        }
+      },
+      "ports" : {
+        "inputs" : [ ],
+        "outputs" : [ {
+          "id" : "Tfd0VSD2",
+          "slug" : "out"
+        } ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : true
+      }
+    }
+  },
+  "connections" : [ ],
+  "component" : "Model"
+}

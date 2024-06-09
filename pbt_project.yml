@@ -1,0 +1,127 @@
+name: dbt_linkedin
+description: ''
+version: 0.0.1
+author: null
+language: sql
+buildSystem: ''
+buildSystemDetails: null
+pipelines: {}
+datasets: {}
+templates: {}
+jobs: {}
+gemContainer:
+  languageVersion: ''
+  gemLibsVersion: ''
+  gems: {}
+  dependencies: null
+functions:
+  author: null
+  createdAt: '2024-06-09 16:49:19'
+  udfs: {}
+  udafs: {}
+  expressions: {}
+  airflowFunctions: {}
+  businessRules: {}
+subgraphs: {}
+sqlModels:
+  .prophecy/metadata/sqlmodels/linkedin_ads__creative_report:
+    name: linkedin_ads__creative_report
+    schema: null
+    description: Each record in this table represents the daily performance of ads
+      at the creative level.
+    author: maciej@prophecy.io
+    files:
+    - models/linkedin_ads__creative_report.sql
+    - .prophecy/ide/models/linkedin_ads__creative_report.json
+    - models/linkedin.yml
+    sqlDependencies:
+      models: []
+      datasets: []
+      seeds: []
+      sources: []
+      snapshots: []
+    createdAt: '2024-06-09 16:49:20'
+  .prophecy/metadata/sqlmodels/linkedin_ads__account_report:
+    name: linkedin_ads__account_report
+    schema: null
+    description: Each record in this table represents the daily performance of ads
+      at the account level.
+    author: maciej@prophecy.io
+    files:
+    - models/linkedin_ads__account_report.sql
+    - .prophecy/ide/models/linkedin_ads__account_report.json
+    - models/linkedin.yml
+    sqlDependencies:
+      models: []
+      datasets: []
+      seeds: []
+      sources: []
+      snapshots: []
+    createdAt: '2024-06-09 16:49:20'
+  .prophecy/metadata/sqlmodels/linkedin_ads__campaign_group_report:
+    name: linkedin_ads__campaign_group_report
+    schema: null
+    description: Each record in this table represents the daily performance of ads
+      at the campaign group level.
+    author: maciej@prophecy.io
+    files:
+    - models/linkedin_ads__campaign_group_report.sql
+    - .prophecy/ide/models/linkedin_ads__campaign_group_report.json
+    - models/linkedin.yml
+    sqlDependencies:
+      models: []
+      datasets: []
+      seeds: []
+      sources: []
+      snapshots: []
+    createdAt: '2024-06-09 16:49:20'
+  .prophecy/metadata/sqlmodels/linkedin_ads__url_report:
+    name: linkedin_ads__url_report
+    schema: null
+    description: Each record in this table represents the daily performance of ads
+      at the url level.
+    author: maciej@prophecy.io
+    files:
+    - models/linkedin_ads__url_report.sql
+    - .prophecy/ide/models/linkedin_ads__url_report.json
+    - models/linkedin.yml
+    sqlDependencies:
+      models: []
+      datasets: []
+      seeds: []
+      sources: []
+      snapshots: []
+    createdAt: '2024-06-09 16:49:20'
+  .prophecy/metadata/sqlmodels/linkedin_ads__campaign_report:
+    name: linkedin_ads__campaign_report
+    schema: null
+    description: Each record in this table represents the daily performance of ads
+      at the campaign level.
+    author: maciej@prophecy.io
+    files:
+    - models/linkedin_ads__campaign_report.sql
+    - .prophecy/ide/models/linkedin_ads__campaign_report.json
+    - models/linkedin.yml
+    sqlDependencies:
+      models: []
+      datasets: []
+      seeds: []
+      sources: []
+      snapshots: []
+    createdAt: '2024-06-09 16:49:20'
+sqlSnapshots: {}
+sqlTests: {}
+sqlMacros: {}
+sqlSeeds: {}
+sqlSources: {}
+sqlUnreferencedSources: {}
+sqlPipeline:
+  name: sqlPipeline
+  description: null
+  author: maciej@prophecy.io
+  createdAt: '2024-06-09 16:49:19'
+dependencies: []
+projectDependencies: {}
+flags:
+  shouldAddDefaultDependenciesIfAbsent: true
+pipelineConfigurations: {}
